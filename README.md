@@ -38,33 +38,109 @@ biblioteca-web/
 ├── src/
 │   ├── main/
 │   │   ├── java/
-│   │   │   ├── controller/      # Servlets
-│   │   │   ├── dao/             # Data Access Objects
-│   │   │   ├── model/           # Entidades
-│   │   │   └── util/            # Utilitários
-│   │   ├── resources/
-│   │   │   └── META-INF/        # Configurações
-│   │   └── webapp/
-│   │       ├── assets/          # CSS, JS, imagens
+│   │   │   ├── controller/               # Servlets
+│   │   │   │   ├── AutorServlet.java
+│   │   │   │   ├── EmprestimoServlet.java
+│   │   │   │   ├── LivroServlet.java
+│   │   │   │   └── PessoaServlet.java
+│   │   │   ├── dao/                     # Camada de dados
+│   │   │   │   ├── AdministradorDAO.java
+│   │   │   │   ├── AutorDAO.java
+│   │   │   │   ├── EmprestimoDAO.java
+│   │   │   │   ├── LivroDAO.java
+│   │   │   │   └── PessoaDAO.java
+│   │   │   ├── model/                   # Entidades
+│   │   │   │   ├── Administrador.java
+│   │   │   │   ├── Autor.java
+│   │   │   │   ├── Emprestimo.java
+│   │   │   │   ├── Livro.java
+│   │   │   │   └── Pessoa.java
+│   │   │   └── util/                    # Utilitários
+│   │   │       ├── ConexaoBD.java
+│   │   │       └── Criptografia.java
+│   │   └── webapp/                      # Frontend
 │   │       ├── WEB-INF/
-│   │       │   └── views/       # Páginas JSP
-│   │       └── index.jsp        # Página inicial
-├── database/
-│   └── schema.sql               # Script do banco de dados
-└── pom.xml                      # Configuração Maven
+│   │       ├── assets/
+│   │       │   └── styles.css           # Estilos
+│   │       ├── autores.jsp              # Views
+│   │       ├── emprestimos.jsp
+│   │       ├── index.jsp
+│   │       ├── livros.jsp
+│   │       └── pessoas.jsp
+│   └── test/                            # Testes
+├── target/
+├── pom.xml                              # Dependências
+└── Libraries/
+    ├── mysql-connector-j-9.3.0.jar      # Driver MySQL
+    ├── jstl-impl-3.0.1.jar              # JSTL
+    └── jstl-api-3.0.0.jar
 ````
 # 📚 Documentação
 Rotas Principais
 ```bash
-| Rota               | Descrição                 | Método      |
-|--------------------|---------------------------|-------------|
-| `/dashboard`       | Painel principal          | GET         |
-| `/autores`         | CRUD de autores           | GET/POST    |
-| `/livros`          | CRUD de livros            | GET/POST    |
-| `/pessoas`         | CRUD de usuários          | GET/POST    |
-| `/emprestimos`     | Gerenciar empréstimos     | GET/POST    |
-````
+### 📚 Gestão de Acervo
+```http
+GET /livros
+```
+**Descrição**: Lista todos os livros cadastrados  
+**Parâmetros**:
+- `?status=disponivel` (Filtro por status)
 
+```http
+POST /livros
+```
+**Body**:
+```json
+{
+  "isbn": "123456789",
+  "titulo": "Dom Casmurro",
+  "autorId": 1,
+  "genero": "Literatura"
+}
+```
+
+### 👥 Gestão de Pessoas
+| Rota          | Método | Descrição                     | Parâmetros               |
+|---------------|--------|-------------------------------|--------------------------|
+| `/pessoas`    | GET    | Lista usuários                | `?nome=valor` (opcional) |
+| `/pessoas`    | POST   | Cadastra novo usuário         | JSON no body             |
+
+### 🔄 Empréstimos
+```http
+GET /emprestimos?status=ativo
+```
+**Resposta**:
+```json
+[
+  {
+    "id": 1,
+    "livro": "Dom Casmurro",
+    "usuario": "João Silva",
+    "dataPrevista": "2023-12-15"
+  }
+]
+```
+
+
+### Diagrama de Rotas
+```mermaid
+graph TD
+    B[Dashboard]
+    B --> C[Livros]
+    B --> D[Autores]
+    B --> E[Empréstimos]
+    C --> F[Novo Livro]
+    E --> G[Registrar Devolução]
+    D --> H[Novo Autor]
+
+```
+
+**Legenda**:
+- 🔒 Rotas privadas (requer autenticação)
+- 🌍 Rotas públicas
+- 📡 Métodos disponíveis: GET, POST, PUT, DELETE
+````
+````
 # 📄 Licença
 Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes.
 
